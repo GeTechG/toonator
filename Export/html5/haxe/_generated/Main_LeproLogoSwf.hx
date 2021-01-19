@@ -8,7 +8,7 @@ class Main_LeproLogoSwf extends openfl.display.BitmapData
 	{
 		super(0, 0, true, 0);
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Kf5mLG1MtxnFZ8PDClhB");
+		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
 		var symbol:swf.exporters.animate.AnimateBitmapSymbol = cast library.symbols.get(1);
 		var image = library.getImage(symbol.path);
 		__fromImage(image);

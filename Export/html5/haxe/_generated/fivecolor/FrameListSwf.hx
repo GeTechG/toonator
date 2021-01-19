@@ -10,7 +10,7 @@ class FrameListSwf extends #if flash flash.display.MovieClip.MovieClip2 #else op
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Kf5mLG1MtxnFZ8PDClhB");
+		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
 		var symbol = library.symbols.get(40);
 		symbol.__initObject(library, this);
 	}

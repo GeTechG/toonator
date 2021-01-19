@@ -10,7 +10,7 @@ class ColorPicker_swatchSkinSwf extends #if flash flash.display.MovieClip.MovieC
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Kf5mLG1MtxnFZ8PDClhB");
+		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
 		var symbol = library.symbols.get(106);
 		symbol.__initObject(library, this);
 	}

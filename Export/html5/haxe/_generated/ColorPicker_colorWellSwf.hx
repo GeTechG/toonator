@@ -10,7 +10,7 @@ class ColorPicker_colorWellSwf extends #if flash flash.display.MovieClip.MovieCl
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Kf5mLG1MtxnFZ8PDClhB");
+		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
 		var symbol = library.symbols.get(119);
 		symbol.__initObject(library, this);
 	}
