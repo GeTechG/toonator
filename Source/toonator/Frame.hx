@@ -32,7 +32,7 @@ class Frame
         this.splines = [];
         this.sprite = new Sprite();
         this.sprite.blendMode = BlendMode.LAYER;
-        this.sprite.cacheAsBitmap = true;
+        //this.sprite.cacheAsBitmap = true;
     }
     
     public function addSpline(param1 : Array<Dynamic>, param2 : Int, param3 : String, param4 : Int, param5 : Bool = false, param6 : Int = 0) : Shape
@@ -61,7 +61,7 @@ class Frame
             _loc8_++;
         }
         var _loc9_ : Shape = new Shape();
-        _loc9_.blendMode = BlendMode.NORMAL;
+        _loc9_.blendMode = (param3 == "eraser") ? BlendMode.ERASE : BlendMode.NORMAL;
         var _loc10_ : Graphics = _loc9_.graphics;
         if (param4 == 0)
         {
@@ -112,9 +112,9 @@ class Frame
             this.sprite.removeChildAt(this.sprite.numChildren - 1);
             if (this.newSplines > 0)
             {
-                this.newPoints -= Std.int(_loc1_.spline.length);
+                this.newPoints -= cast(_loc1_.spline, Array<Dynamic>).length;
                 this.newSplines--;
-                this.drawTime -= Std.int(_loc1_.drawTime);
+                this.drawTime -= cast(_loc1_.drawTime, Int);
             }
             if (this.splines.length == 0)
             {
@@ -124,6 +124,7 @@ class Frame
                 this.drawTime = 0;
             }
         }
+        this.redrawFrame();
     }
     
     public function copy() : Frame
@@ -175,7 +176,7 @@ class Frame
             _loc3_.graphics.beginFill(this.splines[_loc4_].color);
             CubicBezier.curveThroughPoints(_loc3_.graphics, _loc5_, 0.5, 0.75, true);
             _loc3_.graphics.endFill();
-            if (this.splines[_loc4_].color != 0xFFFFFF)
+            if (this.splines[_loc4_].color != 16777215)
             {
                 param1.draw(_loc3_);
             }

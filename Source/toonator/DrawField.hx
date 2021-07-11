@@ -1,6 +1,5 @@
 package toonator;
 
-import openfl.Vector;
 import com.motiondraw.LineGeneralization;
 import flash.display.*;
 import flash.events.Event;
@@ -9,6 +8,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.ui.Mouse;
+import openfl.Vector;
 
 class DrawField extends Sprite
 {
@@ -36,7 +36,7 @@ class DrawField extends Sprite
     
     private var backBitmap2 : Bitmap;
     
-    public var currentBitmap : Bitmap;
+    private var currentBitmap : Bitmap;
     
     private var drawSprite : Sprite;
     
@@ -269,6 +269,10 @@ class DrawField extends Sprite
     private function init(param1 : Event = null) : Void
     {
         removeEventListener(Event.ADDED_TO_STAGE, this.init);
+
+        this.canvasWidth = stage.stageWidth;
+        this.canvasHeight = stage.stageHeight - 90;
+
         this.activeTool = TOOL_PEN;
         this.penSize = 4;
         this.penColor = 0;
@@ -311,7 +315,7 @@ class DrawField extends Sprite
         this.canvasMatrix = new Matrix();
         this.canvasMatrix.scale(this.canvasScale, this.canvasScale);
         graphics.clear();
-        graphics.beginFill(0xFFFFFF);
+        graphics.beginFill(16777215);
         graphics.drawRect(0, 0, param2, param3);
         graphics.endFill();
         this.backContainerSprite2.removeChild(this.backBitmap2);
@@ -449,14 +453,14 @@ class DrawField extends Sprite
         this.cursorSprite.graphics.clear();
         if (_loc3_ <= 4)
         {
-            this.cursorSprite.graphics.beginFill(0xFFFFFF, 1);
+            this.cursorSprite.graphics.beginFill(16777215, 1);
             this.cursorSprite.graphics.lineStyle(1.2, this.penColor, 1);
             this.cursorSprite.graphics.drawEllipse(0, 0, _loc3_, _loc3_);
             this.cursorSprite.graphics.endFill();
         }
         else
         {
-            this.cursorSprite.graphics.lineStyle(1.2, 0xFFFFFF, 1);
+            this.cursorSprite.graphics.lineStyle(1.2, 16777215, 1);
             this.cursorSprite.graphics.drawEllipse(-0.2, -0.2, _loc3_ + 0.4, _loc3_ + 0.4);
             this.cursorSprite.graphics.lineStyle(1.2, this.penColor, 1);
             this.cursorSprite.graphics.drawEllipse(0, 0, _loc3_, _loc3_);
@@ -470,7 +474,7 @@ class DrawField extends Sprite
     
     public function setTool(param1 : String) : Void
     {
-        if (param1 == TOOL_PEN && this.penColor == 0xFFFFFF)
+        if (param1 == TOOL_PEN && this.penColor == 16777215)
         {
             param1 = TOOL_ERASER;
         }
@@ -509,9 +513,9 @@ class DrawField extends Sprite
             _loc2_ = this.currentBitmap.bitmapData.getPixel32(Std.int(mouseX), Std.int(mouseY));
             if (_loc2_ >> 24 == 0)
             {
-                _loc2_ = 0xFFFFFF;
+                _loc2_ = 16777215;
             }
-            _loc2_ = _loc2_ & 0xFFFFFF;
+            _loc2_ = _loc2_ & 16777215;
             this.setColor(_loc2_);
             dispatchEvent(new Event(Main.DRAW_COLOR_PICK));
             return;
@@ -538,8 +542,8 @@ class DrawField extends Sprite
                     y : this.lastY / this.canvasScale
                 }];
         this.drawShape = new Shape();
-        this.drawShape.blendMode = BlendMode.NORMAL;
-        this.drawShape.graphics.lineStyle(this.penSize, (this.activeTool == TOOL_ERASER) ? 0xFFFFFF : this.penColor);
+        this.drawShape.blendMode = (this.activeTool == TOOL_ERASER) ? BlendMode.ERASE : BlendMode.NORMAL;
+        this.drawShape.graphics.lineStyle(this.penSize, this.penColor);
         this.drawShape.graphics.moveTo(mouseX, mouseY);
         this.drawSprite.addChild(this.drawShape);
         if (this.oldschoolMode)
@@ -603,7 +607,7 @@ class DrawField extends Sprite
             this.points = _loc5_.simplifyLang(5, 10, this.points);
         }
         this.drawSprite.removeChild(this.drawShape);
-        var _loc3_ : Shape = this.activeFrame.addSpline(this.points, (this.activeTool == TOOL_ERASER) ? 0xFFFFFF : as3hx.Compat.parseInt(this.penColor), this.activeTool, this.penSize, false, this.beginTime);
+        var _loc3_ : Shape = this.activeFrame.addSpline(this.points, (this.activeTool == TOOL_ERASER) ? 16777215 : as3hx.Compat.parseInt(this.penColor), this.activeTool, this.penSize, false, this.beginTime);
         dispatchEvent(new Event(Main.DRAW_FRAME_UPDATE));
         if (this.activeTool == TOOL_ERASER)
         {
@@ -842,7 +846,7 @@ class DrawField extends Sprite
             _loc17_.push(new Point(_loc12_[_loc18_].x, _loc12_[_loc18_].y));
             _loc18_++;
         }
-        var _loc19_ : Shape = this.activeFrame.addSpline(_loc12_, (this.activeTool == TOOL_ERASER) ? 0xFFFFFF : as3hx.Compat.parseInt(this.penColor), this.activeTool, 0);
+        var _loc19_ : Shape = this.activeFrame.addSpline(_loc12_, (this.activeTool == TOOL_ERASER) ? 16777215 : as3hx.Compat.parseInt(this.penColor), this.activeTool, 0);
         dispatchEvent(new Event(Main.DRAW_FRAME_UPDATE));
         if (this.activeTool == TOOL_ERASER)
         {

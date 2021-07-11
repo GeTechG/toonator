@@ -1,20 +1,20 @@
 package fivecolor;
 
-import toonator.*;
 import flash.display.MovieClip;
 import flash.display.SimpleButton;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.events.EventDispatcher;
 
 class ToolPanel extends ToolPanelSwf
 {
     public var enablePalette(get, set) : Bool;
-    
+
     private var _enablePalette : Bool = false;
-    public var penColor : Int = 0;
+    
     public var penSize : Int = 4;
-    //public var cc : ColorPicker;
+    public var penColor : Int = 0;
+
+    public var cc:CC;
     
     public function new()
     {
@@ -40,13 +40,26 @@ class ToolPanel extends ToolPanelSwf
         this.pc2.addEventListener(MouseEvent.MOUSE_DOWN, this.setPenColor);
         this.pc1.visible = true;
         this.pc2.visible = true;
-        //this.cc.addEventListener(ColorPickerEvent.CHANGE, this.setPenColorPicker);
-        //this.cc.visible = false;
+
+        this.cc = new CC();
+        this.cc.x = 211;
+        this.cc.y = -187;
+        setPickerColor(0);
+
+        //this.cc.addEventListener("changeColor", this.setPenColorPicker);
+        this.cc.visible = false;
         this.btnPicker.visible = false;
         this._enablePalette = false;
-        this.frameList.addEventListener("currentFrameChanged", this.currentFrameChanged);
     }
     
+    public function setPenColorPicker(param1 : ChangeColorEvent) : Void
+    {
+        //trace(param1.selectedColor);
+        this.penColor = param1.selectedColor;
+        setPickerColor(param1.selectedColor);
+        dispatchEvent(new Event("setPenColor"));
+    }
+
     public function setPencil(param1 : Event) : Void
     {
         dispatchEvent(new Event("setPencil"));
@@ -63,13 +76,12 @@ class ToolPanel extends ToolPanelSwf
         this.btnPencil.setState(false);
     }
     
-    /*public function setPenColorPicker(param1 : ColorPickerEvent) : Void
+    public function setPickerColor(param1 : Int) : Void
     {
-        this.penColor = param1.target.selectedColor;
-        dispatchEvent(new Event("setPenColor"));
-    }*/
-    
-    private function currentFrameChanged(param1 : ChangeFrameEvent) : Void
+        this.cc.SetColor(param1);
+    }
+
+    public function currentFrameChanged(param1 : ChangeFrameEvent) : Void
     {
         dispatchEvent(new ChangeFrameEvent("currentFrameChanged", param1.preFrame, param1.curFrame, param1.force));
     }
@@ -83,12 +95,7 @@ class ToolPanel extends ToolPanelSwf
     {
         dispatchEvent(new Event("saveMovie"));
     }
-    
-    public function setPickerColor(param1 : Int) : Void
-    {
-        //this.cc.selectedColor = param1;
-    }
-    
+        
     private function addFrame(param1 : MouseEvent) : Void
     {
         if (param1.ctrlKey)
@@ -118,6 +125,7 @@ class ToolPanel extends ToolPanelSwf
             }
             _loc4_++;
         }
+        setPickerColor(this.penColor);
         dispatchEvent(new Event("setPenColor"));
     }
     
@@ -166,31 +174,30 @@ class ToolPanel extends ToolPanelSwf
     
     private function set_enablePalette(param1 : Bool) : Bool
     {
-        return param1;
-
         if (this._enablePalette == param1)
         {
             return param1;
         }
         this._enablePalette = param1;
+
         if (param1)
         {
             this.pc1.removeEventListener(MouseEvent.MOUSE_DOWN, this.setPenColor);
             this.pc2.removeEventListener(MouseEvent.MOUSE_DOWN, this.setPenColor);
-            //this.cc.addEventListener(ColorPickerEvent.CHANGE, this.setPenColorPicker);
+            this.cc.addEventListener("changeColor", this.setPenColorPicker);
             this.pc1.visible = false;
             this.pc2.visible = false;
-            //this.cc.visible = true;
+            this.cc.visible = true;
             this.btnPicker.visible = true;
         }
         else
         {
             this.pc1.addEventListener(MouseEvent.MOUSE_DOWN, this.setPenColor);
             this.pc2.addEventListener(MouseEvent.MOUSE_DOWN, this.setPenColor);
-            //this.cc.removeEventListener(ColorPickerEvent.CHANGE, this.setPenColorPicker);
+            this.cc.removeEventListener("changeColor", this.setPenColorPicker);
             this.pc1.visible = true;
             this.pc2.visible = true;
-            //this.cc.visible = false;
+            this.cc.visible = false;
             this.btnPicker.visible = false;
         }
         return param1;

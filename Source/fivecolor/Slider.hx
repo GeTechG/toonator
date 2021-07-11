@@ -6,20 +6,9 @@ import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 
 class Slider extends SliderSwf
-{
-    
-    
-    //public var sbMove : MovieClip;
-    
+{       
     private var max : Int = 5;
-    
-    //public var sbRight : SimpleButton;
-    
-    //public var sbSlider : MovieClip;
-    
     private var pos : Int = 0;
-    
-    //public var sbLeft : SimpleButton;
     
     public function new()
     {

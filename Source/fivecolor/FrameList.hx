@@ -7,7 +7,7 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-class FrameList extends FrameListSwf
+class FrameList extends MovieClip
 {
     
     
@@ -17,7 +17,7 @@ class FrameList extends FrameListSwf
     
     private var curFrame : Int = -1;
     
-    private var bmps : Array<BitmapData>;
+    private var bmps : Array<Dynamic>;
     
     private var numbers : Array<Dynamic>;
     
@@ -38,7 +38,7 @@ class FrameList extends FrameListSwf
         this.bitmapFramesThumb = new Array<Dynamic>();
         this.frames = new Bitmap(new BitmapData(516, 24));
         addChild(this.frames);
-        this.bmps = new Array<BitmapData>();
+        this.bmps = new Array<Dynamic>();
         var _loc1_ : Int = 0;
         while (_loc1_ < 10)
         {
@@ -70,10 +70,7 @@ class FrameList extends FrameListSwf
         }
         else
         {
-            //todooo
             this.bitmapFramesThumb.insert(param1, param2);
-            //this.bitmapFramesThumb.splice(param1, 0);
-            //this.bitmapFramesThumb[param1] = param2;
         }
         this.preFrame = this.curFrame;
         this.curFrame = param1;
@@ -111,7 +108,7 @@ class FrameList extends FrameListSwf
         {
             this.endPos = this.bitmapFramesThumb.length - 1;
         }
-        this.frames.bitmapData.fillRect(this.frames.bitmapData.rect, 0xFFFFFF);
+        this.frames.bitmapData.fillRect(this.frames.bitmapData.rect, 0xFFFFFFFF);
         var _loc1_ : Int = this.startPos;
         while (_loc1_ <= this.endPos)
         {
@@ -121,7 +118,6 @@ class FrameList extends FrameListSwf
                 this.frames.bitmapData.copyPixels(this.bitmapFramesThumb[_loc1_], this.bitmapFramesThumb[_loc1_].rect, new Point(_loc2_ * 48 + 1, 1));
                 _loc3_ = _loc1_;
                 _loc4_ = 1;
-
                 do
                 {
                     _loc5_ = _loc3_ % 10;
@@ -129,7 +125,7 @@ class FrameList extends FrameListSwf
                     _loc3_ = as3hx.Compat.parseInt(_loc3_ / 10);
                     _loc4_++;
                 }
-                while (_loc3_ > 0);
+                while ((_loc3_ > 0));
                 
                 this.frames.bitmapData.fillRect(new Rectangle((_loc2_ + 1) * 48, 0, 1, 24), 0xFF000000);
                 if (_loc1_ == this.curFrame)

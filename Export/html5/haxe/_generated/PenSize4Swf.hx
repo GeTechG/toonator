@@ -10,8 +10,8 @@ class PenSize4Swf extends fivecolor.TriggerButton
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
-		var symbol = library.symbols.get(71);
+		var library = swf.exporters.animate.AnimateLibrary.get("5PWWR61HV1pT7uVGH11N");
+		var symbol = library.symbols.get(60);
 		symbol.__initObject(library, this);
 	}
 }

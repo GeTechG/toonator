@@ -10,8 +10,8 @@ class HintButtonSwf extends fivecolor.HintButton
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
-		var symbol = library.symbols.get(43);
+		var library = swf.exporters.animate.AnimateLibrary.get("5PWWR61HV1pT7uVGH11N");
+		var symbol = library.symbols.get(32);
 		symbol.__initObject(library, this);
 	}
 }

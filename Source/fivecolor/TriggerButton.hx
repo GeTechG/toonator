@@ -19,17 +19,17 @@ class TriggerButton extends MovieClip
         super();
         useHandCursor = true;
         buttonMode = true;
-        stop();
         addEventListener(MouseEvent.MOUSE_OVER, this.overButton);
         addEventListener(MouseEvent.MOUSE_OUT, this.outButton);
         addEventListener(MouseEvent.MOUSE_DOWN, this.clickButton);
         addEventListener(Event.ADDED_TO_STAGE, this.added);
     }
-    
-    private function added(param1:Event):Void
+
+    private function added(e:Event):Void
     {
         stop();
     }
+    
     private function outButton(param1 : Event) : Void
     {
         this.isOver = false;

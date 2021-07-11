@@ -11,8 +11,8 @@ class CancelButtonSwf extends #if flash flash.display.MovieClip.MovieClip2 #else
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("Jb3Q6P3BTijIGvBXiqUb");
-		var symbol = library.symbols.get(27);
+		var library = swf.exporters.animate.AnimateLibrary.get("5PWWR61HV1pT7uVGH11N");
+		var symbol = library.symbols.get(26);
 		symbol.__initObject(library, this);
 	}
 }

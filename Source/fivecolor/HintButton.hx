@@ -11,8 +11,6 @@ import flash.text.TextFormat;
 
 class HintButton extends MovieClip
 {
-    
-    
     private var hint : String = "";
     
     private var isDown : Bool = false;
@@ -26,15 +24,14 @@ class HintButton extends MovieClip
         super();
         useHandCursor = true;
         buttonMode = true;
-        stop();
         addEventListener(MouseEvent.MOUSE_OVER, this.overButton);
         addEventListener(MouseEvent.MOUSE_OUT, this.outButton);
         addEventListener(MouseEvent.MOUSE_DOWN, this.downButton);
         addEventListener(MouseEvent.MOUSE_UP, this.upButton);
         addEventListener(Event.ADDED_TO_STAGE, this.added);
     }
-    
-    private function added(param1:Event):Void
+
+    private function added(e:Event):Void
     {
         stop();
     }

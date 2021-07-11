@@ -1,7 +1,5 @@
 package toonator;
 
-import fivecolor.Slider;
-import fivecolor.FrameList;
 import flash.errors.Error;
 import fivecolor.ChangeFrameEvent;
 import fivecolor.SlideEvent;
@@ -31,6 +29,7 @@ import flash.net.URLRequestMethod;
 import flash.ui.Mouse;
 import flash.utils.ByteArray;
 import flash.utils.Endian;
+import fivecolor.*;
 
 class Main extends MovieClip
 {
@@ -113,9 +112,8 @@ class Main extends MovieClip
     private var uploader : URLLoader;
     
     private var totalUploadSize : Int;
-
-    private var frameList:FrameList;
-    private var framesSlider:Slider;
+    public var framesSlider:Slider;
+    public var frameList:FrameList;
     
     public function new()
     {
@@ -157,7 +155,7 @@ class Main extends MovieClip
         {
             this.isDraft = false;
         }
-        else if (this.session != "")
+        else if (this.session != null)
         {
             this.loadSession(this.session);
         }
@@ -180,17 +178,20 @@ class Main extends MovieClip
         this.playSprite.addChild(this.playBitmap);
         this.toolPanel = new ToolPanel();
         this.toolPanel.y = 300;
-        this.toolPanel.removeChild(this.toolPanel.framesSlider);
-        this.toolPanel.removeChild(this.toolPanel.frameList);
+
         this.framesSlider = new Slider();
         this.framesSlider.x = 79.5;
         this.framesSlider.y = 29.95;
+        this.toolPanel.addChild(this.framesSlider);
+
         this.frameList = new FrameList();
         this.frameList.x = 81;
         this.frameList.y = 3;
-        addChild(this.toolPanel);
         this.toolPanel.addChild(this.frameList);
-        this.toolPanel.addChild(this.framesSlider);
+
+        this.toolPanel.addChild(this.toolPanel.cc);
+
+        addChild(this.toolPanel);
         this.toolPanel.addEventListener("addFrame", this.onAddFrame);
         this.toolPanel.addEventListener("addFramePrev", this.onAddFrame);
         this.toolPanel.addEventListener("delFrame", this.onDelFrame);
@@ -202,6 +203,8 @@ class Main extends MovieClip
         this.toolPanel.addEventListener("playMovie", this.onPlayMovie);
         this.toolPanel.addEventListener("pauseMovie", this.onPauseMovie);
         this.toolPanel.addEventListener("saveMovie", this.onSaveMovie);
+        this.frameList.addEventListener("currentFrameChanged", this.toolPanel.currentFrameChanged);
+
         this.toolPanel.addEventListener(MouseEvent.MOUSE_OVER, this.onOver);
         if (this.frameLimit > 0)
         {
@@ -212,16 +215,20 @@ class Main extends MovieClip
         {
             this.toolPanel.enablePalette = true;
         }
+
+        /*
         if (ExternalInterface.available)
         {
             ExternalInterface.addCallback("enablePalette", this.enablePalette);
         }
+        */
+
         this.framesSlider.addEventListener("sliderMove", this.onSliderMove);
-        this.frameList.addEventListener("currentFrameChanged", this.onFrameChanged);
+        this.toolPanel.addEventListener("currentFrameChanged", this.onFrameChanged);
         stage.addEventListener(Event.RESIZE, this.onStageResize);
         stage.scaleMode = StageScaleMode.NO_SCALE;
         stage.align = StageAlign.TOP_LEFT;
-        this.onAddFrame();
+        this.onAddFrameWithBool();
         this.drawField.setPenSize(this.toolPanel.penSize);
         this.drawField.setColor(this.replaceColor);
         this.fadeSprite.graphics.beginFill(13421772, 0.9);
@@ -245,7 +252,9 @@ class Main extends MovieClip
         this.saveComplete.y = height / 2 - this.saveComplete.height / 2;
         this.saveComplete.visible = false;
         this.saveComplete.btnOK.addEventListener(MouseEvent.CLICK, this.onSaveComplete2);
-
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, this.keyDown);
+        stage.addEventListener(KeyboardEvent.KEY_UP, this.keyUp);
+        
         if (this.lang == "en")
         {
             this.saveComplete.lbl_saved.text = "Animation saved";
@@ -254,7 +263,7 @@ class Main extends MovieClip
             this.saveForm.lbl_name.text = "Name:";
             this.saveForm.lbl_keywords.text = "Keywords:";
             this.saveForm.lbl_description.text = "Description:";
-    
+        
             this.saveForm.btnSave.lbl_save.text = "save";
             this.saveForm.btnCancel.lbl_cancel.text = "cancel";
         }
@@ -262,22 +271,19 @@ class Main extends MovieClip
         {
             this.saveComplete.lbl_saved.text = "Анимация сохранена";
             this.saveComplete.lbl_page.text = "Ссылка:";
-    
+        
             this.saveForm.lbl_name.text = "Название:";
             this.saveForm.lbl_keywords.text = "Ключевые слова:";
             this.saveForm.lbl_description.text = "Описание:";
-                
+                    
             this.saveForm.btnSave.lbl_save.text = "сохранить";
             this.saveForm.btnCancel.lbl_cancel.text = "отмена";
-        
+            
             this.toolPanel.btnAddFrame.setHint("c Ctrl для добавления перед текушим кадром");
         }
-            
+
         this.saveForm.btnSave.buttonMode = true;
         this.saveForm.btnCancel.buttonMode = true;
-
-        stage.addEventListener(KeyboardEvent.KEY_DOWN, this.keyDown);
-        stage.addEventListener(KeyboardEvent.KEY_UP, this.keyUp);
     }
     
     public function enablePalette() : Void
@@ -438,7 +444,7 @@ class Main extends MovieClip
             {
                 if (_loc4_ > 0)
                 {
-                    this.onAddFrameBool(true);
+                    this.onAddFrameWithBool(true);
                 }
                 this.frames[this.curFrame].splines = _loc3_[_loc4_];
                 this.frames[this.curFrame].havePreview = false;
@@ -461,7 +467,7 @@ class Main extends MovieClip
                 _loc4_ = 0;
                 while (_loc4_ < this.frameLimit)
                 {
-                    this.onAddFrameBool(true);
+                    this.onAddFrameWithBool(true);
                     _loc4_++;
                 }
                 this.curFrame = _loc16_;
@@ -550,13 +556,6 @@ class Main extends MovieClip
                 this.frame.undo();
                 this.drawField.updateFrame();
                 this.drawField.redrawCurrent();
-                
-                if(this.frame.splines.length == 0)
-                {
-                    trace('dead');
-                    trace(this.frames[this.curFrame].splines);
-                    this.frames[this.curFrame].splines = [];
-                }
             }
         }
         else if (param1.keyCode == 67 && !this.disableCopy)
@@ -705,7 +704,7 @@ class Main extends MovieClip
         if (this.lastFrameSprite != null)
         {
         }
-        this.playBitmap.bitmapData.fillRect(new Rectangle(0, 0, this.canvasWidth, this.canvasHeight), 0xFFFFFF);
+        this.playBitmap.bitmapData.fillRect(new Rectangle(0, 0, this.canvasWidth, this.canvasHeight), 16777215);
         this.playBitmap.bitmapData.draw(_loc1_.sprite, this.matrix);
         this.lastFrameSprite = _loc1_.sprite;
         this.playFrame++;
@@ -717,7 +716,7 @@ class Main extends MovieClip
     
     private function onSetPencil(param1 : Event) : Void
     {
-        if (this.drawField.getColor() == 0xFFFFFF)
+        if (this.drawField.getColor() == 16777215)
         {
             this.drawField.setTool(DrawField.TOOL_ERASER);
         }
@@ -737,15 +736,16 @@ class Main extends MovieClip
         this.drawField.setTool("picker");
     }
     
-    private function onAddFrameBool(param2:Bool = false):Void
+    private function onAddFrame(param1:Event):Void
     {
-        AddFrame(null, param2);
+        frameAdder(param1);
     }
-    private function onAddFrame(param1 : Event = null) : Void
+    private function onAddFrameWithBool(param2:Bool = false):Void
     {
-        AddFrame(param1, false);
+        frameAdder(null, param2);
     }
-    private function AddFrame(param1:Event, param2:Bool = false):Void
+
+    private function frameAdder(param1 : Event = null, param2 : Bool = false) : Void
     {
         var _loc3_ : Frame = new Frame();
         if (param1 != null)
@@ -804,7 +804,7 @@ class Main extends MovieClip
         {
             this.drawField.setColor(this.toolPanel.penColor);
         }
-        if (this.drawField.getColor() == 0xFFFFFF)
+        if (this.drawField.getColor() == 16777215)
         {
             this.toolPanel.setErase(null);
         }
@@ -1079,6 +1079,7 @@ class Main extends MovieClip
                 this.locked = false;
                 ExternalInterface.call("m.lockExit(\'draw\',false)");
                 js.Syntax.code('location.href = {0}', goUrl);
+                //ExternalInterface.call("window.location.replace(\'" + goUrl + "\')");
             }
             else
             {
@@ -1152,10 +1153,10 @@ class Main extends MovieClip
         {
             this.playSprite.removeChild(this.playBitmap);
             this.playSprite.graphics.clear();
-            this.playSprite.graphics.beginFill(0xFFFFFF);
+            this.playSprite.graphics.beginFill(16777215);
             this.playSprite.graphics.drawRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.playSprite.graphics.endFill();
-            this.playBitmap = new Bitmap(new BitmapData(this.canvasWidth, this.canvasHeight, true, 0xFFFFFF));
+            this.playBitmap = new Bitmap(new BitmapData(this.canvasWidth, this.canvasHeight, true, 16777215));
             this.playSprite.addChild(this.playBitmap);
         }
         this.saveForm.x = stage.stageWidth / 2 - this.saveForm.width / 2;
