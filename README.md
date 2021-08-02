@@ -1,5 +1,5 @@
 # toonator
-Неофициальный порт редактора мультфильмов с сайта multator.ru на openfl.
+Неофициальный порт редактора мультфильмов с сайта https://multator.ru на openfl.
 https://chrome.google.com/webstore/detail/fmmcopjolcbkinblnjddfiojpglebpdp
 
 ## Установка
