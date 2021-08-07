@@ -7,6 +7,7 @@ https://chrome.google.com/webstore/detail/fmmcopjolcbkinblnjddfiojpglebpdp
 Далее ставишь OpenFL, для этого нужно ввести в консоли команды:
 ```bash
 haxelib install openfl
+haxelib install swf
 haxelib run openfl setup
 ```
 Для проверки того, что всё сработало, достаточно ввести:
