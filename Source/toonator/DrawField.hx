@@ -1,5 +1,6 @@
 package toonator;
 
+import fivecolor.FrameList;
 import com.motiondraw.LineGeneralization;
 import flash.display.*;
 import flash.events.Event;
@@ -8,6 +9,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.ui.Mouse;
+import haxe.Json;
 import openfl.Vector;
 
 class DrawField extends Sprite
@@ -922,5 +924,59 @@ class DrawField extends Sprite
         }
         return _loc3_;
     }
+
+    public function loadJsonFrames(text:String, main: Main) {
+        var json:Array<Array<Path>> = haxe.Json.parse(text);
+        for (index => paths in json) {
+            if (main.frames.length <= index) {
+                main.frameAdder(new Event("addFrame"));
+            }
+            for (index => path in paths) {
+                if (path.color == 0xffffff) {
+                    this.activeTool = TOOL_ERASER;
+                } else {
+                    this.activeTool = TOOL_PEN;
+                }
+                for (index => spline in path.splines) {
+                    var len_spline:Float = 0.0;
+                    var last_point:PointJS = spline[0];
+                    spline = spline.map((point) -> {
+                        len_spline += Math.sqrt(Math.pow((point.x-last_point.x), 2) + Math.pow((point.y-last_point.y), 2));
+                        point.x = point.x / this.canvasScale;
+                        point.y = point.y / this.canvasScale;
+                        return point;
+                    });
+                    trace(len_spline);
+                    var _loc5_ = new LineGeneralization();
+                    spline = cast _loc5_.simplifyLang(3, 3, spline);
+                    this.setPenSize(path.width);
+                    var _loc19_ : Shape = this.activeFrame.addSpline(spline,  as3hx.Compat.parseInt(path.color), this.activeTool, this.penSize, false, Std.int(1));
+                    
+					dispatchEvent(new Event(Main.DRAW_FRAME_UPDATE));
+					if (this.activeTool == TOOL_ERASER)
+					{
+						this.redrawCurrent();
+					}
+					else
+					{
+						this.currentBitmap.bitmapData.draw(_loc19_, this.canvasMatrix);
+					}
+					
+					main.frames[main.curFrame] = this.activeFrame;
+                }
+            }
+        }
+    }
+}
+
+class PointJS {
+    public var x: Float;
+    public var y: Float;
+}
+
+class Path {
+    public var splines:Array<Array<PointJS>>;
+    public var width:Int;
+    public var color:Int;
 }
 

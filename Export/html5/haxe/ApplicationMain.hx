@@ -32,7 +32,7 @@ class ApplicationMain
 
 		ManifestResources.init(config);
 
-		app.meta["build"] = "2";
+		app.meta["build"] = "9";
 		app.meta["company"] = "kr0tyara";
 		app.meta["file"] = "ToonatorEditor";
 		app.meta["name"] = "ToonatorEditor";
@@ -113,7 +113,7 @@ class ApplicationMain
 			@:privateAccess preloader.start();
 		});
 
-		preloader.onComplete.add(start.bind(cast(app.window, openfl.display.Window).stage));
+		preloader.onComplete.add(start.bind((cast app.window:openfl.display.Window).stage));
 
 		for (library in ManifestResources.preloadLibraries)
 		{

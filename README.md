@@ -4,9 +4,10 @@ https://chrome.google.com/webstore/detail/fmmcopjolcbkinblnjddfiojpglebpdp
 
 ## Установка
 Сначала скачиваешь Haxe и neko с haxe.org.
-Далее ставишь OpenFL, для этого нужно ввести в консоли команды:
+Далее ставишь OpenFL и библиотеку SWF, для этого нужно ввести в консоли команды:
 ```bash
 haxelib install openfl
+haxelib install swf
 haxelib run openfl setup
 ```
 Для проверки того, что всё сработало, достаточно ввести:

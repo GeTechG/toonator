@@ -1,5 +1,8 @@
 package toonator;
 
+import js.Browser;
+import js.html.Document;
+import openfl.text.TextField;
 import flash.errors.Error;
 import fivecolor.ChangeFrameEvent;
 import fivecolor.SlideEvent;
@@ -45,9 +48,9 @@ class Main extends MovieClip
     
     private var toolPanel : ToolPanel;
     
-    private var curFrame : Int = -1;
+    public var curFrame : Int = -1;
     
-    private var frames : Array<Dynamic>;
+    public var frames : Array<Dynamic>;
     
     private var playSprite : Sprite;
     
@@ -111,6 +114,8 @@ class Main extends MovieClip
     
     private var uploader : URLLoader;
     
+    public var importJsonButton: TextField;
+
     private var totalUploadSize : Int;
     public var framesSlider:Slider;
     public var frameList:FrameList;
@@ -284,6 +289,17 @@ class Main extends MovieClip
 
         this.saveForm.btnSave.buttonMode = true;
         this.saveForm.btnCancel.buttonMode = true;
+
+        importJsonButton = new TextField();
+        importJsonButton.text = "Load";
+        importJsonButton.width = 120;
+        importJsonButton.height = 20;
+        importJsonButton.addEventListener(MouseEvent.CLICK, (param1 : Event) -> {
+            Browser.navigator.clipboard.readText().then((text) -> {
+                drawField.loadJsonFrames(text, this);
+            });
+        });
+        addChild(importJsonButton);
     }
     
     public function enablePalette() : Void
@@ -745,7 +761,7 @@ class Main extends MovieClip
         frameAdder(null, param2);
     }
 
-    private function frameAdder(param1 : Event = null, param2 : Bool = false) : Void
+    public function frameAdder(param1 : Event = null, param2 : Bool = false) : Void
     {
         var _loc3_ : Frame = new Frame();
         if (param1 != null)
@@ -1167,6 +1183,9 @@ class Main extends MovieClip
         this.fadeSprite.graphics.endFill();
         this.saveComplete.x = stage.stageWidth / 2 - this.saveComplete.width / 2;
         this.saveComplete.y = stage.stageHeight / 2 - this.saveComplete.height / 2;
+
+        importJsonButton.y = stage.stageHeight - 40;
+        trace(this.canvasWidth, this.canvasHeight);
     }
 }
 

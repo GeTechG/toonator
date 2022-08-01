@@ -10,7 +10,7 @@ class CheckboxSwf extends #if flash flash.display.MovieClip.MovieClip2 #else ope
 	{
 		super();
 
-		var library = swf.exporters.animate.AnimateLibrary.get("5PWWR61HV1pT7uVGH11N");
+		var library = swf.exporters.animate.AnimateLibrary.get("U62f7xxBxj0LgeHMrCHk");
 		var symbol = library.symbols.get(27);
 		symbol.__initObject(library, this);
 	}
